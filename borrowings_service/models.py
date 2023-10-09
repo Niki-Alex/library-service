@@ -35,10 +35,10 @@ class Borrowing(models.Model):
         return not bool(self.actual_return_date)
 
     @staticmethod
-    def validate_book_inventory(book, error_to_raise):
-        if book == 0:
+    def validate_book_inventory(book_inventory, error_to_raise):
+        if book_inventory == 0:
             raise error_to_raise(
-                {"book": f"Borrowing cannot be created, because the inventory book: '{book}' is 0"}
+                {"book_inventory": "Borrowing cannot be created, because the inventory this book is 0"}
             )
 
     @staticmethod
