@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 
 from books_service.models import Book, Author
+from books_service.permissions import IsAdminOrReadOnly
 from books_service.serializers import (
     BookSerializer,
     BookListSerializer,
@@ -11,6 +12,7 @@ from books_service.serializers import (
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all().prefetch_related("author")
     serializer_class = BookSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
     def get_queryset(self):
         queryset = self.queryset
