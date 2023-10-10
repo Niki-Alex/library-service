@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 from books_service.models import Book
 from borrowings_service.models import Borrowing
+from borrowings_service.permissions import IsAdminOrIsOwnerGetPost
 from borrowings_service.serializers import (
     BorrowingSerializer,
     BorrowingListSerializer,
@@ -19,6 +20,7 @@ from borrowings_service.serializers import (
 class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all().select_related("book", "user")
     serializer_class = BorrowingSerializer
+    permission_classes = (IsAdminOrIsOwnerGetPost,)
 
     def get_queryset(self):
         queryset = self.queryset
@@ -60,6 +62,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         methods=["POST"],
         detail=True,
         url_path="return",
+        permission_classes=[IsAdminOrIsOwnerGetPost],
     )
     def return_view(self, request, pk=None):
         borrowing = self.get_object()
