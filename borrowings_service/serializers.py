@@ -45,3 +45,25 @@ class BorrowingCreateSerializer(BorrowingSerializer):
             borrowing.book.inventory -= 1
             borrowing.book.save()
             return borrowing
+
+
+class BorrowingReturnSerializer(BorrowingSerializer):
+    actual_return_date = serializers.DateField(required=False, read_only=True)
+
+    class Meta:
+        model = Borrowing
+        fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+            "user",
+            "is_active"
+        )
+        read_only_fields = (
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+            "user",
+        )
