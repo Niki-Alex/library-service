@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -12,7 +14,6 @@ class BorrowingSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         data = super(BorrowingSerializer, self).validate(attrs=attrs)
         Borrowing.validate_date(
-            attrs["expected_return_date"],
             ValidationError,
             attrs.get("actual_return_date", None)
         )
@@ -35,9 +36,15 @@ class BorrowingListSerializer(BorrowingSerializer):
 
 class BorrowingCreateSerializer(BorrowingSerializer):
 
-    class Meta:
-        model = Borrowing
-        fields = ("id", "expected_return_date", "book")
+    def validate(self, attrs):
+        data = super(BorrowingSerializer, self).validate(attrs=attrs)
+        today = datetime.date.today()
+        if attrs["expected_return_date"] < today:
+            raise ValidationError(
+                {"expected_return_date": f"Expected return date can't be any sooner than {today}"}
+            )
+
+        return data
 
     def create(self, validated_data):
         with transaction.atomic():
@@ -45,6 +52,10 @@ class BorrowingCreateSerializer(BorrowingSerializer):
             borrowing.book.inventory -= 1
             borrowing.book.save()
             return borrowing
+
+    class Meta:
+        model = Borrowing
+        fields = ("id", "expected_return_date", "book")
 
 
 class BorrowingReturnSerializer(BorrowingSerializer):
@@ -59,8 +70,9 @@ class BorrowingReturnSerializer(BorrowingSerializer):
             "actual_return_date",
             "book",
             "user",
-            "is_active"
+            "is_active",
         )
+
         read_only_fields = (
             "expected_return_date",
             "actual_return_date",

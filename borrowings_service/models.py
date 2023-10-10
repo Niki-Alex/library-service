@@ -42,12 +42,8 @@ class Borrowing(models.Model):
             )
 
     @staticmethod
-    def validate_date(expected_return_date, error_to_raise, actual_return_date=None):
+    def validate_date(error_to_raise, actual_return_date=None):
         today = datetime.date.today()
-        if expected_return_date < today:
-            raise error_to_raise(
-                {"expected_return_date": f"{expected_return_date} can't be any sooner than {today}"}
-            )
         if actual_return_date and actual_return_date != today:
             raise error_to_raise(
                 {"actual_return_date": f"{actual_return_date} cannot be earlier or later than {today}"}
@@ -55,7 +51,7 @@ class Borrowing(models.Model):
 
     def clean(self):
         Borrowing.validate_date(
-            self.expected_return_date, ValidationError, self.actual_return_date
+            ValidationError, self.actual_return_date
         )
 
     def save(

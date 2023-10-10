@@ -20,6 +20,26 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all().select_related("book", "user")
     serializer_class = BorrowingSerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        user_id = self.request.query_params.get("user_id")
+        is_active = self.request.query_params.get("is_active")
+
+        if is_active:
+            if is_active == "True":
+                queryset = queryset.filter(actual_return_date__isnull=True)
+            elif is_active == "False":
+                queryset = queryset.exclude(actual_return_date__isnull=True)
+
+        if user_id:
+            queryset = queryset.filter(user_id=user_id)
+
+        queryset = queryset.distinct()
+
+        if not self.request.user.is_staff:
+            return queryset.filter(user=self.request.user.id)
+        return queryset
+
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
             return BorrowingListSerializer
