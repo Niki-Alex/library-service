@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 from books_service.models import Book
 from borrowings_service.models import Borrowing
+from borrowings_service.paginations import BorrowingPagination
 from borrowings_service.permissions import IsAdminOrIsOwnerGetPost
 from borrowings_service.serializers import (
     BorrowingSerializer,
@@ -21,6 +22,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all().select_related("book", "user")
     serializer_class = BorrowingSerializer
     permission_classes = (IsAdminOrIsOwnerGetPost,)
+    pagination_class = BorrowingPagination
 
     def get_queryset(self):
         queryset = self.queryset
