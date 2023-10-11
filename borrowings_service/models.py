@@ -1,5 +1,8 @@
+import datetime
+
 from django.conf import settings
 from django.db import models
+from rest_framework.exceptions import ValidationError
 
 from books_service.models import Book
 
@@ -30,3 +33,35 @@ class Borrowing(models.Model):
     @property
     def is_active(self):
         return not bool(self.actual_return_date)
+
+    @staticmethod
+    def validate_book_inventory(book_inventory, error_to_raise):
+        if book_inventory == 0:
+            raise error_to_raise(
+                {"book_inventory": "Borrowing cannot be created, because the inventory this book is 0"}
+            )
+
+    @staticmethod
+    def validate_date(error_to_raise, actual_return_date=None):
+        today = datetime.date.today()
+        if actual_return_date and actual_return_date != today:
+            raise error_to_raise(
+                {"actual_return_date": f"{actual_return_date} cannot be earlier or later than {today}"}
+            )
+
+    def clean(self):
+        Borrowing.validate_date(
+            ValidationError, self.actual_return_date
+        )
+
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None,
+    ):
+        self.full_clean()
+        return super(Borrowing, self).save(
+            force_insert, force_update, using, update_fields
+        )
