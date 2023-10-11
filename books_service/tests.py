@@ -55,7 +55,7 @@ class UnauthenticatedBooksApiTests(TestCase):
         serializer = BookListSerializer(books, many=True)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data, serializer.data)
+        self.assertEqual(res.data["results"], serializer.data)
 
     def test_filter_books_by_title(self):
         book1 = sample_book(title="Book")
@@ -68,9 +68,9 @@ class UnauthenticatedBooksApiTests(TestCase):
         serializer2 = BookListSerializer(book2)
         serializer3 = BookListSerializer(book3)
 
-        self.assertIn(serializer1.data, res.data)
-        self.assertIn(serializer2.data, res.data)
-        self.assertNotIn(serializer3.data, res.data)
+        self.assertIn(serializer1.data, res.data["results"])
+        self.assertIn(serializer2.data, res.data["results"])
+        self.assertNotIn(serializer3.data, res.data["results"])
 
     def test_retrieve_books_detail(self):
         book = sample_book()
