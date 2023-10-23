@@ -53,6 +53,7 @@ class Borrowing(models.Model):
         Borrowing.validate_date(
             ValidationError, self.actual_return_date
         )
+        Borrowing.validate_book_inventory(self.book.inventory, ValidationError)
 
     def save(
             self,
