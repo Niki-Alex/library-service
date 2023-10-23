@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -22,8 +23,12 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.ManyToManyField(to=Author, related_name="books")
     cover = models.CharField(max_length=4, choices=CoverChoices.choices)
-    inventory = models.PositiveIntegerField()
-    daily_fee = models.DecimalField(max_digits=4, decimal_places=2)
+    inventory = models.IntegerField(validators=[MinValueValidator(0)])
+    daily_fee = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        validators=[MinValueValidator(0)]
+    )
 
     def __str__(self):
         return self.title
