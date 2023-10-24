@@ -26,22 +26,32 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Borrowing
-        fields = ("id", "borrow_date", "expected_return_date", "actual_return_date", "book", "user", "is_active")
+        fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+            "user",
+            "is_active",
+        )
 
 
 class BorrowingListSerializer(BorrowingSerializer):
     book = BookListSerializer(many=False, read_only=True)
-    user = serializers.SlugRelatedField(read_only=True, many=False, slug_field="email")
+    user = serializers.SlugRelatedField(
+        read_only=True, many=False, slug_field="email"
+    )
 
 
 class BorrowingCreateSerializer(BorrowingSerializer):
-
     def validate(self, attrs):
         data = super(BorrowingSerializer, self).validate(attrs=attrs)
         today = datetime.date.today()
         if attrs["expected_return_date"] < today:
             raise ValidationError(
-                {"expected_return_date": f"Expected return date can't be any sooner than {today}"}
+                {"expected_return_date": f"Expected return date can't "
+                                         f"be any sooner than {today}"}
             )
 
         return data
@@ -59,7 +69,9 @@ class BorrowingCreateSerializer(BorrowingSerializer):
 
 
 class BorrowingReturnSerializer(BorrowingSerializer):
-    actual_return_date = serializers.DateField(required=False, read_only=True)
+    actual_return_date = serializers.DateField(
+        required=False, read_only=True
+    )
 
     class Meta:
         model = Borrowing
