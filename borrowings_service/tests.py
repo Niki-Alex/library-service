@@ -45,11 +45,15 @@ def sample_borrowing(user, **params):
 
 
 def borrowing_detail_url(borrowings_id):
-    return reverse("borrowings_service:borrowings-detail", args=[borrowings_id])
+    return reverse(
+        "borrowings_service:borrowings-detail", args=[borrowings_id]
+    )
 
 
 def borrowing_return_url(borrowings_id):
-    return reverse("borrowings_service:borrowings-return-view", args=[borrowings_id])
+    return reverse(
+        "borrowings_service:borrowings-return-view", args=[borrowings_id]
+    )
 
 
 class UnauthenticatedBorrowingApiTests(TestCase):
