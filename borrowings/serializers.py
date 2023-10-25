@@ -91,3 +91,15 @@ class BorrowingReturnSerializer(BorrowingSerializer):
             "book",
             "user",
         )
+
+    def perform_return(self, borrowing, book):
+        if not borrowing.is_active:
+            raise ValidationError(
+                {"actual_return_date": f"This borrowing has already been closed"}
+            )
+
+        borrowing.actual_return_date = datetime.date.today()
+        borrowing.save()
+
+        book.inventory += 1
+        book.save()
