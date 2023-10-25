@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from rest_framework.exceptions import ValidationError
 
-from books_service.models import Book
+from books.models import Book
 
 
 class Borrowing(models.Model):

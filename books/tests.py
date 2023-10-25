@@ -5,10 +5,10 @@ from rest_framework import status
 
 from rest_framework.test import APIClient
 
-from books_service.models import Book, Author
-from books_service.serializers import BookListSerializer
+from books.models import Book, Author
+from books.serializers import BookListSerializer
 
-BOOK_URL = reverse("books_service:books-list")
+BOOK_URL = reverse("books:books-list")
 
 
 def sample_author(**params):
@@ -38,7 +38,7 @@ def sample_book(**params):
 
 
 def book_detail_url(book_id):
-    return reverse("books_service:books-detail", args=[book_id])
+    return reverse("books:books-detail", args=[book_id])
 
 
 class UnauthenticatedBooksApiTests(TestCase):

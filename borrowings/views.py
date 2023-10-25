@@ -6,11 +6,11 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from books_service.models import Book
-from borrowings_service.models import Borrowing
-from borrowings_service.paginations import BorrowingPagination
-from borrowings_service.permissions import IsAdminOrIsOwnerGetPost
-from borrowings_service.serializers import (
+from books.models import Book
+from borrowings.models import Borrowing
+from borrowings.paginations import BorrowingPagination
+from borrowings.permissions import IsAdminOrIsOwnerGetPost
+from borrowings.serializers import (
     BorrowingSerializer,
     BorrowingListSerializer,
     BorrowingCreateSerializer,

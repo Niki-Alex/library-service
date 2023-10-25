@@ -4,8 +4,8 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from books_service.serializers import BookListSerializer
-from borrowings_service.models import Borrowing
+from books.serializers import BookListSerializer
+from borrowings.models import Borrowing
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
