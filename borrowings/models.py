@@ -28,7 +28,7 @@ class Borrowing(models.Model):
         )
         return (
             f"Book: {self.book.title}, borrow date: {self.borrow_date}\n"
-            f"User: {self.user.email}, {self.is_active}\n" + active
+            f"User: {self.user.email}, {self.is_active}\n{active}"
         )
 
     @property
