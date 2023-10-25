@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 from rest_framework.exceptions import ValidationError
 
-from books_service.models import Book
+from books.models import Book
 
 
 class Borrowing(models.Model):
@@ -28,7 +28,7 @@ class Borrowing(models.Model):
         )
         return (
             f"Book: {self.book.title}, borrow date: {self.borrow_date}\n"
-            f"User: {self.user.email}, {self.is_active}\n" + active
+            f"User: {self.user.email}, {self.is_active}\n{active}"
         )
 
     @property

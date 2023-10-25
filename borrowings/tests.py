@@ -7,11 +7,11 @@ from rest_framework import status
 
 from rest_framework.test import APIClient
 
-from books_service.models import Book, Author
-from borrowings_service.models import Borrowing
-from borrowings_service.serializers import BorrowingListSerializer
+from books.models import Book, Author
+from borrowings.models import Borrowing
+from borrowings.serializers import BorrowingListSerializer
 
-BORROWINGS_URL = reverse("borrowings_service:borrowings-list")
+BORROWINGS_URL = reverse("borrowings:borrowings-list")
 EXPECTED_RETURN_DATE = datetime.date.today() + datetime.timedelta(days=3)
 
 
@@ -46,13 +46,13 @@ def sample_borrowing(user, **params):
 
 def borrowing_detail_url(borrowings_id):
     return reverse(
-        "borrowings_service:borrowings-detail", args=[borrowings_id]
+        "borrowings:borrowings-detail", args=[borrowings_id]
     )
 
 
 def borrowing_return_url(borrowings_id):
     return reverse(
-        "borrowings_service:borrowings-return-view", args=[borrowings_id]
+        "borrowings:borrowings-return-view", args=[borrowings_id]
     )
 
 

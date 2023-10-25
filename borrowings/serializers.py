@@ -4,8 +4,8 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from books_service.serializers import BookListSerializer
-from borrowings_service.models import Borrowing
+from books.serializers import BookListSerializer
+from borrowings.models import Borrowing
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -91,3 +91,15 @@ class BorrowingReturnSerializer(BorrowingSerializer):
             "book",
             "user",
         )
+
+    def perform_return(self, borrowing, book):
+        if not borrowing.is_active:
+            raise ValidationError(
+                {"actual_return_date": f"This borrowing has already been closed"}
+            )
+
+        borrowing.actual_return_date = datetime.date.today()
+        borrowing.save()
+
+        book.inventory += 1
+        book.save()

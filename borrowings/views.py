@@ -1,16 +1,13 @@
-import datetime
-
 from django.db import transaction
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from books_service.models import Book
-from borrowings_service.models import Borrowing
-from borrowings_service.paginations import BorrowingPagination
-from borrowings_service.permissions import IsAdminOrIsOwnerGetPost
-from borrowings_service.serializers import (
+from books.models import Book
+from borrowings.models import Borrowing
+from borrowings.paginations import BorrowingPagination
+from borrowings.permissions import IsAdminOrIsOwnerGetPost
+from borrowings.serializers import (
     BorrowingSerializer,
     BorrowingListSerializer,
     BorrowingCreateSerializer,
@@ -68,16 +65,9 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     )
     def return_view(self, request, pk=None):
         borrowing = self.get_object()
-
-        if not borrowing.is_active:
-            raise ValidationError(
-                {"actual_return_date": f"This borrowing has already been closed"}
-            )
-
-        borrowing.actual_return_date = datetime.date.today()
         serializer = self.get_serializer(borrowing)
         book = Book.objects.get(pk=borrowing.book.id)
-        book.inventory += 1
-        book.save()
-        borrowing.save()
+
+        serializer.perform_return(borrowing, book)
+
         return Response(serializer.data, status=status.HTTP_200_OK)

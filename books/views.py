@@ -1,10 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAdminUser
 
-from books_service.models import Book, Author
-from books_service.paginations import BookPagination
-from books_service.permissions import IsAdminOrReadOnly
-from books_service.serializers import (
+from books.models import Book, Author
+from books.paginations import BookPagination
+from books.permissions import IsAdminOrReadOnly
+from books.serializers import (
     BookSerializer,
     BookListSerializer,
     AuthorSerializer,
